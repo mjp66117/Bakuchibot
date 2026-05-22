@@ -171,10 +171,9 @@ def send_city():
 
             print(r.text)
 
-    except Exception as e:
-    print("CITY ERROR:")
-    traceback.print_exc()
-
+        except Exception as e:
+        print("CITY ERROR:")
+        traceback.print_exc()
 
 # ---------------- FACT POST ----------------
 
