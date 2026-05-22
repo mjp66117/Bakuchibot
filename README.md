@@ -1,0 +1,2 @@
+# Bakuchibot
+Bakuchi official bot
