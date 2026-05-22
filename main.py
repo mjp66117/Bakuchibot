@@ -31,8 +31,8 @@ def send_weather():
         elif "sun" in desc.lower():
             emoji = "☀️"
 
-        today_shamsi = jdatetime.datetime.now().strftime("%Y/%m/%d")
-        today_miladi = datetime.now().strftime("%Y/%m/%d")
+     today_shamsi = jdatetime.datetime.now().strftime("%d %B %Y")
+today_miladi = datetime.now().strftime("%d %B %Y")
 
         message = f"""
 {emoji} باکوچی | وضعیت هوای باکو
