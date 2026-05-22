@@ -1,17 +1,12 @@
-print("FILE STARTED")
-
 import os
 import requests
 import jdatetime
 from time import sleep
 from datetime import datetime
-from telegram import Bot
 
 TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 WEATHER_API = os.getenv("WEATHER_API")
-
-bot = Bot(token=TOKEN)
 
 def send_weather():
     try:
@@ -24,6 +19,12 @@ def send_weather():
         desc = r["weather"][0]["description"]
 
         emoji = "🌤"
+        if "rain" in desc:
+            emoji = "🌧"
+        elif "cloud" in desc:
+            emoji = "☁️"
+        elif "clear" in desc:
+            emoji = "☀️"
 
         today_shamsi = jdatetime.datetime.now().strftime("%Y/%m/%d")
         today_miladi = datetime.now().strftime("%Y/%m/%d")
@@ -40,41 +41,15 @@ def send_weather():
 🌦 وضعیت: {desc}
 """
 
-        bot.send_message(chat_id=CHAT_ID, text=message)
+        send_url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
+        data = {
+            "chat_id": CHAT_ID,
+            "text": message
+        }
 
-        print("MESSAGE SENT")
+        res = requests.post(send_url, data=data)
 
-    except Exception as e:
-        print("ERROR:", e)
-
-temp = round(r["main"]["temp"])
-humidity = r["main"]["humidity"]
-wind = round(r["wind"]["speed"] * 3.6)
-desc = r["weather"][0]["description"]
-
-emoji = "🌤"
-
-        today_shamsi = jdatetime.datetime.now().strftime("%Y/%m/%d")
-        today_miladi = datetime.now().strftime("%Y/%m/%d")
-
-        message = f"""
-{emoji} باکوچی | وضعیت هوای باکو
-
-📅 شمسی: {today_shamsi}
-📆 میلادی: {today_miladi}
-
-🌡 دما: {temp}°C
-💨 باد: {wind} km/h
-💧 رطوبت: {humidity}%
-🌦 وضعیت: {desc}
-
-💬 {weather_comment(temp, desc)}
-
-@bakuchi_official_channel
-"""
-
-        bot.send_message(chat_id=CHAT_ID, text=message)
-        print("MESSAGE SENT")
+        print("Telegram response:", res.text)
 
     except Exception as e:
         print("ERROR:", e)
