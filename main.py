@@ -1,8 +1,9 @@
 import os
 import requests
 import jdatetime
-from time import sleep
+
 from datetime import datetime
+from apscheduler.schedulers.blocking import BlockingScheduler
 
 TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
@@ -13,7 +14,9 @@ def send_weather():
 
     try:
 
-        weather_data = requests.get("https://wttr.in/Baku?format=j1").json()
+        weather_data = requests.get(
+            "https://wttr.in/Baku?format=j1"
+        ).json()
 
         current = weather_data["current_condition"][0]
 
@@ -31,8 +34,8 @@ def send_weather():
         elif "sun" in desc.lower():
             emoji = "☀️"
 
-     today_shamsi = jdatetime.datetime.now().strftime("%d %B %Y")
-today_miladi = datetime.now().strftime("%d %B %Y")
+        today_shamsi = jdatetime.datetime.now().strftime("%d %B %Y")
+        today_miladi = datetime.now().strftime("%d %B %Y")
 
         message = f"""
 {emoji} باکوچی | وضعیت هوای باکو
@@ -59,11 +62,18 @@ today_miladi = datetime.now().strftime("%d %B %Y")
 
         r = requests.post(url, data=data)
 
+        print("TELEGRAM RESPONSE:")
         print(r.text)
 
     except Exception as e:
-        print("ERROR:", e)
+        print("ERROR:")
+        print(e)
 
-while True:
-    send_weather()
-    sleep(3600)
+scheduler = BlockingScheduler()
+
+# ساعت 9 صبح باکو (UTC+4)
+scheduler.add_job(send_weather, "cron", hour=5, minute=0)
+
+print("SCHEDULER STARTED")
+
+scheduler.start()
