@@ -164,8 +164,8 @@ def send_city():
             print(r.text)
 
     except Exception as e:
-        print("CITY ERROR:")
-        print(e)
+    print("CITY ERROR:")
+    traceback.print_exc()
 
 
 # ---------------- FACT POST ----------------
