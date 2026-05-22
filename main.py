@@ -91,12 +91,20 @@ def send_message(message):
 
 
 # ---------------- LOAD JSON ----------------
-
 def load_json(file_path):
 
-    with open(file_path, "r", encoding="utf-8") as f:
-        return json.load(f)
+    print("READING FILE:", file_path)
 
+    with open(file_path, "rb") as f:
+        raw = f.read()
+
+    print("RAW DATA:", raw[:100])
+
+    text = raw.decode("utf-8-sig")
+
+    print("TEXT:", text[:100])
+
+    return json.loads(text)
 
 # ---------------- GET NEXT ITEM ----------------
 
