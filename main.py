@@ -12,7 +12,7 @@ TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 WEATHER_API = os.getenv("WEATHER_API")
 
-bot = Bot(token="BOT_TOKEN")
+bot = Bot(TOKEN="BOT_TOKEN")
 
 # =====================
 # WEATHER TEXT LOGIC
