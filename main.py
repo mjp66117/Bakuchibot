@@ -62,8 +62,14 @@ def send_weather():
 
     bot.send_message(chat_id=CHAT_ID, text=message)
 
-scheduler = BlockingScheduler()
-scheduler.add_job(send_weather, "interval", minutes=1)
+from time import sleep
+
+print("Bot started...")
+
+while True:
+    send_weather()
+    sleep(60)
+
 
 print("Bot started...")
 
