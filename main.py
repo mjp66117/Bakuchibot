@@ -132,7 +132,6 @@ def get_next_item(json_file, index_file):
 
 
 # ---------------- CITY POST ----------------
-
 def send_city():
 
     try:
@@ -171,10 +170,9 @@ def send_city():
 
             print(r.text)
 
-        except Exception as e:
+    except Exception as e:
         print("CITY ERROR:")
-        traceback.print_exc()
-
+        print(e)
 # ---------------- FACT POST ----------------
 
 def send_fact():
