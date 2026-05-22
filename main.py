@@ -17,8 +17,10 @@ bot = Bot(token=TOKEN)
 # =====================
 # WEATHER TEXT LOGIC
 # =====================
-def weather_comment(temp, desc):
-    desc = desc.lower()
+def send_weather():
+    print("TEST RUN")
+
+    bot.send_message(chat_id=CHAT_ID, text="test message")
 
     if "rain" in desc:
         return "🌧 امروز بارونیه، چتر یادت نره"
