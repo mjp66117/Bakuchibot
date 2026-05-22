@@ -1,58 +1,47 @@
 import os
-import requests
+import random
 import jdatetime
 from time import sleep
 from datetime import datetime
 
 TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
-WEATHER_API = os.getenv("WEATHER_API")
+
+def fake_weather():
+    weather_list = [
+        ("☀️", "آفتابی", "هوا عالیه برای بیرون رفتن 🌊"),
+        ("☁️", "ابری", "آسمون کمی گرفته‌ست"),
+        ("🌧", "بارونی", "چتر یادت نره 🌂"),
+        ("🌤", "نیمه ابری", "هوا متعادل و خوبه")
+    ]
+
+    return random.choice(weather_list)
 
 def send_weather():
-    try:
-        url = f"https://api.openweathermap.org/data/2.5/weather?q=Baku&appid={WEATHER_API}&units=metric"
-        r = requests.get(url).json()
+    emoji, desc, comment = fake_weather()
 
-        temp = round(r["main"]["temp"])
-        humidity = r["main"]["humidity"]
-        wind = round(r["wind"]["speed"] * 3.6)
-        desc = r["weather"][0]["description"]
+    today_shamsi = jdatetime.datetime.now().strftime("%Y/%m/%d")
+    today_miladi = datetime.now().strftime("%Y/%m/%d")
 
-        emoji = "🌤"
-        if "rain" in desc:
-            emoji = "🌧"
-        elif "cloud" in desc:
-            emoji = "☁️"
-        elif "clear" in desc:
-            emoji = "☀️"
-
-        today_shamsi = jdatetime.datetime.now().strftime("%Y/%m/%d")
-        today_miladi = datetime.now().strftime("%Y/%m/%d")
-
-        message = f"""
+    message = f"""
 {emoji} باکوچی | وضعیت هوای باکو
 
 📅 شمسی: {today_shamsi}
 📆 میلادی: {today_miladi}
 
-🌡 دما: {temp}°C
-💨 باد: {wind} km/h
-💧 رطوبت: {humidity}%
 🌦 وضعیت: {desc}
+
+💬 {comment}
 """
 
-        send_url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
-        data = {
-            "chat_id": CHAT_ID,
-            "text": message
-        }
+    url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
+    data = {
+        "chat_id": CHAT_ID,
+        "text": message
+    }
 
-        res = requests.post(send_url, data=data)
-
-        print("Telegram response:", res.text)
-
-    except Exception as e:
-        print("ERROR:", e)
+    res = requests.post(url, data=data)
+    print("Telegram response:", res.text)
 
 print("Bot started...")
 
