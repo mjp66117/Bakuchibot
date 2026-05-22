@@ -62,15 +62,8 @@ def send_weather():
 
     bot.send_message(chat_id=CHAT_ID, text=message)
 
-from time import sleep
-
 print("Bot started...")
 
 while True:
     send_weather()
     sleep(60)
-
-
-print("Bot started...")
-
-scheduler.start()
