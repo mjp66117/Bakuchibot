@@ -13,64 +13,36 @@ WEATHER_API = os.getenv("WEATHER_API")
 bot = Bot(token=TOKEN)
 
 def weather_comment(temp, desc):
+    desc = desc.lower()
 
-    desc_lower = desc.lower()
-
-    if "rain" in desc_lower:
-        return "🌧 امروز باکو بارونیه، چتر یادت نره"
-    
-    elif "cloud" in desc_lower:
-        return "☁️ آسمون باکو امروز ابری و آرومه"
-    
+    if "rain" in desc:
+        return "🌧 امروز بارونیه، چتر یادت نره"
+    elif "cloud" in desc:
+        return "☁️ آسمون کمی ابریه"
     elif temp >= 30:
-        return "🔥 هوای باکو حسابی گرمه، آب زیاد بخور"
-    
+        return "🔥 هوا خیلی گرمه"
     elif temp >= 20:
-        return "🌊 باکو امروز حال دریاست، وقت ساحله"
-    
+        return "🌊 هوا عالیه برای بیرون رفتن"
     else:
-        return "🧥 هوا خنکه، لباس مناسب بپوش"
-
-def weather_emoji(desc):
-
-    desc_lower = desc.lower()
-
-    if "clear" in desc_lower:
-        return "☀️"
-
-    elif "cloud" in desc_lower:
-        return "☁️"
-
-    elif "rain" in desc_lower:
-        return "🌧"
-
-    elif "storm" in desc_lower:
-        return "⛈"
-
-    elif "snow" in desc_lower:
-        return "❄️"
-
-    else:
-        return "🌤"
+        return "🧥 هوا خنکه، لباس گرم بپوش"
 
 def send_weather():
+    url = f"https://api.openweathermap.org/data/2.5/weather?q=Baku&appid={WEATHER_API}&units=metric"
 
-    url = f"https://api.openweathermap.org/data/2.5/weather?q=Baku&appid={WEATHER_API}&units=metric&lang=en"
+    r = requests.get(url).json()
 
-    response = requests.get(url).json()
+    temp = round(r["main"]["temp"])
+    humidity = r["main"]["humidity"]
+    wind = round(r["wind"]["speed"] * 3.6)
+    desc = r["weather"][0]["description"]
 
-    temp = round(response["main"]["temp"])
-    humidity = response["main"]["humidity"]
-    wind = round(response["wind"]["speed"] * 3.6)
-    desc = response["weather"][0]["description"]
+    emoji = "🌤"
+    if "rain" in desc: emoji = "🌧"
+    elif "cloud" in desc: emoji = "☁️"
+    elif "clear" in desc: emoji = "☀️"
 
-    emoji = weather_emoji(desc)
-
-    comment = weather_comment(temp, desc)
-
-    today_miladi = datetime.now().strftime("%d %B %Y")
-
-    today_shamsi = jdatetime.datetime.now().strftime("%d %B %Y")
+    today_shamsi = jdatetime.datetime.now().strftime("%Y/%m/%d")
+    today_miladi = datetime.now().strftime("%Y/%m/%d")
 
     message = f"""
 {emoji} باکوچی | وضعیت هوای باکو
@@ -83,7 +55,7 @@ def send_weather():
 💧 رطوبت: {humidity}%
 🌦 وضعیت: {desc}
 
-💬 {comment}
+💬 {weather_comment(temp, desc)}
 
 @bakuchi_official_channel
 """
@@ -91,7 +63,6 @@ def send_weather():
     bot.send_message(chat_id=CHAT_ID, text=message)
 
 scheduler = BlockingScheduler()
-
 scheduler.add_job(send_weather, "cron", hour=9, minute=0)
 
 print("Bot started...")
