@@ -27,16 +27,12 @@ def weather_comment(temp, desc):
     else:
         return "🧥 هوا خنکه"
 
-def send_weather():
-    print("API RESPONSE:", r)
+temp = round(r["main"]["temp"])
+humidity = r["main"]["humidity"]
+wind = round(r["wind"]["speed"] * 3.6)
+desc = r["weather"][0]["description"]
 
-        emoji = "🌤"
-        if "rain" in desc:
-            emoji = "🌧"
-        elif "cloud" in desc:
-            emoji = "☁️"
-        elif "clear" in desc:
-            emoji = "☀️"
+emoji = "🌤"
 
         today_shamsi = jdatetime.datetime.now().strftime("%Y/%m/%d")
         today_miladi = datetime.now().strftime("%Y/%m/%d")
