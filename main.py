@@ -1,3 +1,4 @@
+print("FILE STARTED")
 import os
 import requests
 import jdatetime
