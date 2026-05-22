@@ -26,14 +26,7 @@ def weather_comment(temp, desc):
         return "🧥 هوا خنکه"
 
 def send_weather():
-    try:
-        url = f"https://api.openweathermap.org/data/2.5/weather?q=Baku&appid={WEATHER_API}&units=metric"
-        r = requests.get(url).json()
-
-        temp = round(r["main"]["temp"])
-        humidity = r["main"]["humidity"]
-        wind = round(r["wind"]["speed"] * 3.6)
-        desc = r["weather"][0]["description"]
+    print("API RESPONSE:", r)
 
         emoji = "🌤"
         if "rain" in desc:
