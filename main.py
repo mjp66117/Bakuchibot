@@ -232,7 +232,4 @@ scheduler.add_job(
 )
 
 print("SCHEDULER STARTED")
-send_weather()
-send_city()
-send_fact()
 scheduler.start()
